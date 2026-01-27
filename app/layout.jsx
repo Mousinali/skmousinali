@@ -1,8 +1,7 @@
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
-import SmoothScroll from "./components/SmoothScroll";
-import 'remixicon/fonts/remixicon.css'
+import ClientLayout from "./components/ClientLayout";
+import "remixicon/fonts/remixicon.css";
 
 const geistSans = Geist({
   variable: "--font-geist",
@@ -27,13 +26,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
-        <SmoothScroll />
-        <Header />
-        <main>{children}</main>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
