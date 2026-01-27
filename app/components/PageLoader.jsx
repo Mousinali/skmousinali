@@ -27,10 +27,9 @@ export default function PageLoader() {
     // Lock scroll
     document.documentElement.style.overflow = "hidden";
 
-    // Initial state (window closed)
-    gsap.set(loader, {
-      yPercent: 0,
-    });
+    // Initial state
+    gsap.set(loader, { yPercent: 0 });
+    gsap.set(text, { opacity: 0, y: 20, letterSpacing: "0.35em" });
 
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" },
@@ -40,33 +39,33 @@ export default function PageLoader() {
       },
     });
 
-    tl.fromTo(
-      text,
-      { y: 40, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 5, // slow, confident reveal
-      }
-    )
+    tl.to(text, {
+      opacity: 1,
+      y: 0,
+      duration: 1.1,
+    })
       .to(text, {
-        y: -30,
+        letterSpacing: "0.55em",
+        duration: 0.9,
+      }, "-=0.6")
+      .to(text, {
         opacity: 0,
-        duration: 5,
-        delay: 0.4, // text hold
+        y: -20,
+        duration: 0.8,
+        delay: 0.3,
       })
-      // WINDOW OPENS UPWARD
+      // WINDOW / MASK OPEN UP
       .to(loader, {
         yPercent: -100,
-        duration: 5,
+        duration: 1.3,
         ease: "power4.inOut",
       });
 
-    // Failsafe (never get stuck)
+    // Failsafe
     const safetyTimer = setTimeout(() => {
       document.documentElement.style.overflow = "";
       loader?.remove();
-    }, 4500);
+    }, 4000);
 
     return () => clearTimeout(safetyTimer);
   }, []);
@@ -78,7 +77,8 @@ export default function PageLoader() {
     >
       <div
         ref={textRef}
-        className="text-sm tracking-[0.35em] uppercase text-black/80"
+        className="text-xs uppercase font-medium text-black/80"
+        style={{ letterSpacing: "0.35em" }}
       >
         Mousin
       </div>
