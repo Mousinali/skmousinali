@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: auto;
+}
+html, body {
+  overflow-x: hidden;
+}
+
+/* Default body font → Inter */
+body {
+  background: #fff;
+  color: #121212;
+  font-family: var(--font-inter), system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Use Geist for headings / branding */
+.geist {
+  font-family: var(--font-geist), sans-serif;
+}
+
+/* Mono font */
+.geist-mono {
+  font-family: var(--font-geist-mono), monospace;
+}
+
+/* Marquee edge fade */
+.marquee-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+}
+
+
+/* Performance hint */
+.marquee-track {
+  will-change: transform;
+}
