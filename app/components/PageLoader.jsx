@@ -12,12 +12,12 @@ export default function PageLoader() {
     if (hasRun.current) return;
     hasRun.current = true;
 
-    // Run only once per session
-    if (sessionStorage.getItem("hasLoaded")) {
+    // ✅ RUN ONLY ON FIRST EVER VISIT
+    if (localStorage.getItem("hasLoaded")) {
       loaderRef.current?.remove();
       return;
     }
-    sessionStorage.setItem("hasLoaded", "true");
+    localStorage.setItem("hasLoaded", "true");
 
     const loader = loaderRef.current;
     const text = textRef.current;
@@ -44,17 +44,20 @@ export default function PageLoader() {
       y: 0,
       duration: 1.1,
     })
-      .to(text, {
-        letterSpacing: "0.55em",
-        duration: 0.9,
-      }, "-=0.6")
+      .to(
+        text,
+        {
+          letterSpacing: "0.55em",
+          duration: 0.9,
+        },
+        "-=0.6"
+      )
       .to(text, {
         opacity: 0,
         y: -20,
         duration: 0.8,
         delay: 0.3,
       })
-      // WINDOW / MASK OPEN UP
       .to(loader, {
         yPercent: -100,
         duration: 1.3,
