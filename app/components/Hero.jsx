@@ -40,7 +40,7 @@ export default function Hero() {
                 yPercent: 100,
                 duration: 1,
                 stagger: 0.15,
-                delay : 3,
+                delay : 3.5,
                 rotate: 2
             }).from(
                 ".hero-fade",
