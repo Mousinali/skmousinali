@@ -101,7 +101,7 @@ export default function ServicesSection() {
 
             {/* Header */}
             <div className="max-w-5xl mx-auto px-6 mb-20 text-center">
-                <h2 className="text-lg md:text-3xl lg:text-5xl font-medium tracking-tight">
+                <h2 className="text-lg md:text-3xl lg:text-4xl font-medium tracking-tight">
                     Digital Services
                     <span className="block text-black/40 text-base mt-3">
                         UI/UX · Web · QA

@@ -148,7 +148,7 @@ export default function About() {
 
 
 
-
+      ScrollTrigger.refresh();
     }, sectionRef);
 
     return () => ctx.revert();
@@ -185,8 +185,8 @@ export default function About() {
                    shadow-[0_14px_45px_rgba(0,0,0,0.14)]
                    transform-gpu"
               style={{
-                marginLeft: `${i * 18}px`,      
-                transform: "rotate(6deg)",    
+                marginLeft: `${i * 18}px`,
+                transform: "rotate(6deg)",
               }}
             >
               <span
@@ -213,8 +213,8 @@ export default function About() {
                    shadow-[0_14px_45px_rgba(0,0,0,0.14)]
                    transform-gpu"
               style={{
-                marginRight: `${i * 18}px`, 
-                transform: "rotate(-6deg)",    
+                marginRight: `${i * 18}px`,
+                transform: "rotate(-6deg)",
               }}
             >
               <span
