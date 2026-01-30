@@ -1,23 +1,24 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 
 export default function PageLoader() {
   const loaderRef = useRef(null);
   const textRef = useRef(null);
   const hasRun = useRef(false); // Strict Mode guard
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (hasRun.current) return;
-    hasRun.current = true;
-
-    // ✅ RUN ONLY ON FIRST EVER VISIT
-    if (localStorage.getItem("hasLoaded")) {
+    // ❌ Run ONLY on homepage
+    if (pathname !== "/") {
       loaderRef.current?.remove();
       return;
     }
-    localStorage.setItem("hasLoaded", "true");
+
+    if (hasRun.current) return;
+    hasRun.current = true;
 
     const loader = loaderRef.current;
     const text = textRef.current;
@@ -71,7 +72,7 @@ export default function PageLoader() {
     }, 4000);
 
     return () => clearTimeout(safetyTimer);
-  }, []);
+  }, [pathname]);
 
   return (
     <div
