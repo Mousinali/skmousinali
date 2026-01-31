@@ -7,35 +7,42 @@ import gsap from "gsap";
 export default function PageLoader() {
   const loaderRef = useRef(null);
   const textRef = useRef(null);
-  const hasRun = useRef(false); // Strict Mode guard
+  const hasRun = useRef(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    // ❌ Run ONLY on homepage
+    const loader = loaderRef.current;
+    const text = textRef.current;
+
+    // ❌ Only run on homepage
     if (pathname !== "/") {
-      loaderRef.current?.remove();
+      unlockScroll();
+      loader?.remove();
       return;
     }
 
     if (hasRun.current) return;
     hasRun.current = true;
 
-    const loader = loaderRef.current;
-    const text = textRef.current;
-
     if (!loader || !text) return;
 
-    // Lock scroll
-    document.documentElement.style.overflow = "hidden";
+    /* =============================
+       🔒 LOCK SCROLL
+       ============================= */
+    lockScroll();
 
     // Initial state
     gsap.set(loader, { yPercent: 0 });
-    gsap.set(text, { opacity: 0, y: 20, letterSpacing: "0.35em" });
+    gsap.set(text, {
+      opacity: 0,
+      y: 20,
+      letterSpacing: "0.35em",
+    });
 
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" },
       onComplete: () => {
-        document.documentElement.style.overflow = "";
+        unlockScroll();
         loader.remove();
       },
     });
@@ -66,13 +73,22 @@ export default function PageLoader() {
         ease: "power2.inOut",
       });
 
-    // Failsafe
+    /* =============================
+       🛟 FAILSAFE (ABSOLUTE)
+       ============================= */
     const safetyTimer = setTimeout(() => {
-      document.documentElement.style.overflow = "";
+      unlockScroll();
       loader?.remove();
-    }, 4000);
+    }, 4500);
 
-    return () => clearTimeout(safetyTimer);
+    /* =============================
+       🧹 CLEANUP (VERY IMPORTANT)
+       ============================= */
+    return () => {
+      clearTimeout(safetyTimer);
+      unlockScroll();
+      tl.kill();
+    };
   }, [pathname]);
 
   return (
@@ -89,4 +105,17 @@ export default function PageLoader() {
       </div>
     </div>
   );
+}
+
+/* =============================
+   SCROLL HELPERS (CLEAN)
+   ============================= */
+function lockScroll() {
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+}
+
+function unlockScroll() {
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
 }
