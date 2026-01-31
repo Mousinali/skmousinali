@@ -8,8 +8,6 @@ import gsap from "gsap";
    SCROLL LOCK HELPERS
    ============================= */
 
-let scrollPosition = 0;
-
 function preventScroll(e) {
   e.preventDefault();
 }
@@ -30,10 +28,11 @@ function preventKeys(e) {
 }
 
 function lockScroll() {
-  scrollPosition = window.scrollY;
+  // 🔑 ALWAYS START AT TOP
+  window.scrollTo(0, 0);
 
   document.body.style.position = "fixed";
-  document.body.style.top = `-${scrollPosition}px`;
+  document.body.style.top = "0px";
   document.body.style.left = "0";
   document.body.style.right = "0";
   document.body.style.width = "100%";
@@ -54,7 +53,8 @@ function unlockScroll() {
   document.removeEventListener("touchmove", preventScroll);
   document.removeEventListener("keydown", preventKeys);
 
-  window.scrollTo(0, scrollPosition);
+  // ✅ Stay at top after loader
+  window.scrollTo(0, 0);
 }
 
 /* =============================
@@ -71,7 +71,7 @@ export default function PageLoader() {
     const loader = loaderRef.current;
     const text = textRef.current;
 
-    /* ❌ Only run on homepage */
+    /* ❌ Run only on homepage */
     if (pathname !== "/") {
       unlockScroll();
       loader?.remove();
@@ -84,10 +84,10 @@ export default function PageLoader() {
 
     if (!loader || !text) return;
 
-    /* 🔒 LOCK SCROLL (FULLY) */
+    /* 🔒 LOCK SCROLL */
     lockScroll();
 
-    /* Initial state */
+    /* Initial GSAP state */
     gsap.set(loader, { yPercent: 0 });
     gsap.set(text, {
       opacity: 0,
@@ -130,7 +130,7 @@ export default function PageLoader() {
         ease: "power2.inOut",
       });
 
-    /* 🛟 ABSOLUTE FAILSAFE */
+    /* 🛟 FAILSAFE */
     const safetyTimer = setTimeout(() => {
       unlockScroll();
       loader?.remove();

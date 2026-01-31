@@ -100,7 +100,7 @@ export default function ProjectContactGlassGSAP() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   Project Type
                 </label>
-                <select className="w-full min-h-10 border-b border-gray-300  focus:border-slate-900 focus:ring-slate-900">
+                <select className="w-full min-h-10 border-b border-gray-300  focus:border-slate-900 focus:ring-slate-900 outline-none">
                   <option>Website</option>
                   <option>UI / UX Design</option>
                   <option>Landing Page</option>
@@ -133,7 +133,7 @@ export default function ProjectContactGlassGSAP() {
                   </div>
                 </div>
 
-                <select className="w-full min-h-10 border-b border-gray-300  focus:border-slate-900 focus:ring-slate-900">
+                <select className="w-full min-h-10 border-b border-gray-300  focus:border-slate-900 focus:ring-slate-900 outline-none">
                   {currency === "INR" ? (
                     <>
                       <option>₹25,000 – ₹50,000</option>
