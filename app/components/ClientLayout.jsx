@@ -3,6 +3,7 @@
 import PageLoader from "./PageLoader";
 import SmoothScroll from "./SmoothScroll";
 import Header from "./Header";
+import Footer from "./Footer";
 
 export default function ClientLayout({ children }) {
   return (
@@ -11,6 +12,7 @@ export default function ClientLayout({ children }) {
       <SmoothScroll />
       <Header />
       <main>{children}</main>
+      <Footer />
     </>
   );
 }
