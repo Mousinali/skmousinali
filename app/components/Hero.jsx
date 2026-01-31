@@ -125,7 +125,7 @@ export default function Hero() {
     return (
         <section
             ref={heroRef}
-            className="relative min-h-screen flex flex-col justify-center
+            className="relative min-h-screen flex flex-col justify-end 2xl:justify-center
       bg-gradient-to-b from-white to-slate-50 overflow-hidden 2xl:pt-16 pt-40"
         >
             {/* ===== Animated Background ===== */}
@@ -139,7 +139,7 @@ export default function Hero() {
             </div>
 
             {/* ===== Hero Content ===== */}
-            <div className="relative z-10 max-w-4xl mx-auto px-6 text-center ptop">
+            <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
                 <h1
                     className="text-3xl sm:text-4xl md:text-5xl
           leading-[1.2] tracking-tight"
