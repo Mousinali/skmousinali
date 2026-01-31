@@ -78,6 +78,6 @@ body {
 }
 @media (min-width: 1440px) and (max-width: 1536px) {
   .ptop {
-    padding-top: 6rem !important;
+    padding-top: 8rem !important;
   }
 }
