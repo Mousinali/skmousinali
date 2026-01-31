@@ -139,7 +139,7 @@ export default function Hero() {
             </div>
 
             {/* ===== Hero Content ===== */}
-            <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <div className="relative z-10 max-w-4xl mx-auto px-6 text-center ptop">
                 <h1
                     className="text-3xl sm:text-4xl md:text-5xl
           leading-[1.2] tracking-tight"
