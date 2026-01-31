@@ -49,6 +49,7 @@ export default function PageLoader() {
         text,
         {
           letterSpacing: "0.55em",
+          scale: 1.5,
           duration: 0.9,
         },
         "-=0.6"
@@ -62,7 +63,7 @@ export default function PageLoader() {
       .to(loader, {
         yPercent: -100,
         duration: 1.3,
-        ease: "power4.inOut",
+        ease: "power2.inOut",
       });
 
     // Failsafe
@@ -81,7 +82,7 @@ export default function PageLoader() {
     >
       <div
         ref={textRef}
-        className="text-xs uppercase font-medium text-black/80"
+        className="text-xs uppercase font-medium text-black/80 opacity-0"
         style={{ letterSpacing: "0.35em" }}
       >
         Mousin

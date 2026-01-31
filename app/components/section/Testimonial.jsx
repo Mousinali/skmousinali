@@ -31,8 +31,6 @@ export default function ResultsTestimonials() {
                         start: "195% 75%",
                         end: "205% 75%",
                         toggleActions: "play none none none",
-                        once: true,
-                        markers: true, // REMOVE IN PRODUCTION
                     },
                 }
             );
