@@ -76,8 +76,8 @@ body {
     transform: translate(0px, 0px) scale(1);
   }
 }
-@media (min-width: 1366px) and (max-width: 1440px) {
+@media (min-width: 1440px) and (max-width: 1536px) {
   .ptop {
-    padding-top: 6rem;
+    padding-top: 6rem !important;
   }
 }

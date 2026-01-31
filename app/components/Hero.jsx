@@ -126,7 +126,7 @@ export default function Hero() {
         <section
             ref={heroRef}
             className="relative min-h-screen flex flex-col justify-end 2xl:justify-center
-      bg-gradient-to-b from-white to-slate-50 overflow-hidden 2xl:pt-16 pt-40"
+      bg-gradient-to-b from-white to-slate-50 overflow-hidden 2xl:pt-16 pt-40 ptop"
         >
             {/* ===== Animated Background ===== */}
             <div className="absolute inset-0 pointer-events-none">
