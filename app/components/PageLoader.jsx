@@ -4,6 +4,63 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 
+/* =============================
+   SCROLL LOCK HELPERS
+   ============================= */
+
+let scrollPosition = 0;
+
+function preventScroll(e) {
+  e.preventDefault();
+}
+
+function preventKeys(e) {
+  const keys = [
+    "ArrowUp",
+    "ArrowDown",
+    "PageUp",
+    "PageDown",
+    "Home",
+    "End",
+    " ",
+  ];
+  if (keys.includes(e.key)) {
+    e.preventDefault();
+  }
+}
+
+function lockScroll() {
+  scrollPosition = window.scrollY;
+
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollPosition}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+
+  document.addEventListener("wheel", preventScroll, { passive: false });
+  document.addEventListener("touchmove", preventScroll, { passive: false });
+  document.addEventListener("keydown", preventKeys);
+}
+
+function unlockScroll() {
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+
+  document.removeEventListener("wheel", preventScroll);
+  document.removeEventListener("touchmove", preventScroll);
+  document.removeEventListener("keydown", preventKeys);
+
+  window.scrollTo(0, scrollPosition);
+}
+
+/* =============================
+   PAGE LOADER
+   ============================= */
+
 export default function PageLoader() {
   const loaderRef = useRef(null);
   const textRef = useRef(null);
@@ -14,29 +71,29 @@ export default function PageLoader() {
     const loader = loaderRef.current;
     const text = textRef.current;
 
-    // ❌ Only run on homepage
+    /* ❌ Only run on homepage */
     if (pathname !== "/") {
       unlockScroll();
       loader?.remove();
       return;
     }
 
+    /* ❌ Prevent StrictMode double run */
     if (hasRun.current) return;
     hasRun.current = true;
 
     if (!loader || !text) return;
 
-    /* =============================
-       🔒 LOCK SCROLL
-       ============================= */
+    /* 🔒 LOCK SCROLL (FULLY) */
     lockScroll();
 
-    // Initial state
+    /* Initial state */
     gsap.set(loader, { yPercent: 0 });
     gsap.set(text, {
       opacity: 0,
       y: 20,
       letterSpacing: "0.35em",
+      scale: 1,
     });
 
     const tl = gsap.timeline({
@@ -73,17 +130,13 @@ export default function PageLoader() {
         ease: "power2.inOut",
       });
 
-    /* =============================
-       🛟 FAILSAFE (ABSOLUTE)
-       ============================= */
+    /* 🛟 ABSOLUTE FAILSAFE */
     const safetyTimer = setTimeout(() => {
       unlockScroll();
       loader?.remove();
     }, 4500);
 
-    /* =============================
-       🧹 CLEANUP (VERY IMPORTANT)
-       ============================= */
+    /* 🧹 CLEANUP */
     return () => {
       clearTimeout(safetyTimer);
       unlockScroll();
@@ -105,17 +158,4 @@ export default function PageLoader() {
       </div>
     </div>
   );
-}
-
-/* =============================
-   SCROLL HELPERS (CLEAN)
-   ============================= */
-function lockScroll() {
-  document.documentElement.style.overflow = "hidden";
-  document.body.style.overflow = "hidden";
-}
-
-function unlockScroll() {
-  document.documentElement.style.overflow = "";
-  document.body.style.overflow = "";
 }
