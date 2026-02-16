@@ -66,15 +66,29 @@ export default function PageLoader() {
   const textRef = useRef(null);
   const hasRun = useRef(false);
   const pathname = usePathname();
+  const mounted = useRef(false);
 
   useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mounted.current) return;
+
     const loader = loaderRef.current;
     const text = textRef.current;
 
     /* ❌ Run only on homepage */
     if (pathname !== "/") {
       unlockScroll();
-      loader?.remove();
+      /* Use opacity instead of remove to avoid DOM issues */
+      if (loader) {
+        loader.style.opacity = "0";
+        loader.style.pointerEvents = "none";
+      }
       return;
     }
 
@@ -88,7 +102,7 @@ export default function PageLoader() {
     lockScroll();
 
     /* Initial GSAP state */
-    gsap.set(loader, { yPercent: 0 });
+    gsap.set(loader, { yPercent: 0, opacity: 1, pointerEvents: "auto" });
     gsap.set(text, {
       opacity: 0,
       y: 20,
@@ -100,7 +114,12 @@ export default function PageLoader() {
       defaults: { ease: "power3.out" },
       onComplete: () => {
         unlockScroll();
-        loader.remove();
+        /* Use opacity instead of remove */
+        gsap.to(loader, {
+          opacity: 0,
+          pointerEvents: "none",
+          duration: 0.3,
+        });
       },
     });
 
@@ -132,14 +151,21 @@ export default function PageLoader() {
 
     /* 🛟 FAILSAFE */
     const safetyTimer = setTimeout(() => {
-      unlockScroll();
-      loader?.remove();
+      if (mounted.current) {
+        unlockScroll();
+        if (loader) {
+          loader.style.opacity = "0";
+          loader.style.pointerEvents = "none";
+        }
+      }
     }, 4500);
 
     /* 🧹 CLEANUP */
     return () => {
-      clearTimeout(safetyTimer);
-      unlockScroll();
+      if (safetyTimer) clearTimeout(safetyTimer);
+      if (mounted.current) {
+        unlockScroll();
+      }
       tl.kill();
     };
   }, [pathname]);

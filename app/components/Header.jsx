@@ -1,41 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   // ✅ Ensure client-only rendering
   useEffect(() => {
     setMounted(true);
     setLastScrollY(window.scrollY);
+    setShow(true);
   }, []);
+
+  // ✅ Reset show state on route change
+  useEffect(() => {
+    setShow(true);
+    setLastScrollY(window.scrollY);
+  }, [pathname]);
+
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+
+    // Always show near top
+    if (currentScrollY < 80) {
+      setShow(true);
+    } else {
+      setShow(currentScrollY < lastScrollY);
+    }
+
+    setLastScrollY(currentScrollY);
+  }, [lastScrollY]);
 
   useEffect(() => {
     if (!mounted) return;
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // Always show near top
-      if (currentScrollY < 80) {
-        setShow(true);
-      } else {
-        setShow(currentScrollY < lastScrollY);
-      }
-
-      setLastScrollY(currentScrollY);
-    };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY, mounted]);
+  }, [mounted, handleScroll]);
 
-  // ✅ Prevent server/client mismatch
-  if (!mounted) return null;
+  // ✅ Prevent server/client mismatch - use placeholder to maintain DOM consistency
+  if (!mounted) {
+    return (
+      <header className="fixed top-0 left-0 w-full z-50 h-20" />
+    );
+  }
 
   return (
     <header
