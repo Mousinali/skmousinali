@@ -11,60 +11,66 @@ export default function ServicesSection() {
     const cardsRef = useRef([]);
     const cursorRef = useRef(null);
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            /* ======================
-               STACK SCROLL EFFECT
-            ====================== */
-            cardsRef.current.forEach((card, i) => {
-                gsap.fromTo(
-                    card,
-                    {
-                        y: 120,
-                        scale: 0.8,
-                        opacity: 0,
-                        scrub: 1,
-                    },
-                    {
-                        y: 0,
-                        scale: 1,
-                        opacity: 1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top 30%",
-                            end: "bottom 40%",
-                            scrub: 1,
-                        },
-                    }
-                );
-            });
+useEffect(() => {
+    const moveCursor = (e) => {
+        gsap.to(cursorRef.current, {
+            x: e.clientX,
+            y: e.clientY,
+            duration: 0.35,
+            ease: "power3.out",
+        });
+    };
 
-            /* ======================
-               CURSOR IMAGE FOLLOW
-            ====================== */
-            gsap.set(cursorRef.current, {
-                xPercent: -50,
-                yPercent: -50,
-                autoAlpha: 0,
-                scale: 0.9,
-            });
+    const ctx = gsap.context(() => {
 
-            const moveCursor = (e) => {
-                gsap.to(cursorRef.current, {
-                    x: e.clientX,
-                    y: e.clientY,
-                    duration: 0.35,
+        /* ======================
+           STACK SCROLL EFFECT
+        ====================== */
+        cardsRef.current.forEach((card) => {
+            if (!card) return;
+
+            gsap.fromTo(
+                card,
+                {
+                    y: 120,
+                    scale: 0.9,
+                    opacity: 0,
+                },
+                {
+                    y: 0,
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.9,
                     ease: "power3.out",
-                });
-            };
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 90%",
+                        toggleActions: "play none none reverse",
+                        // markers: true, // enable only when debugging
+                    },
+                }
+            );
+        });
 
-            window.addEventListener("mousemove", moveCursor);
-            return () => window.removeEventListener("mousemove", moveCursor);
-        }, sectionRef);
+        /* ======================
+           CURSOR INITIAL STATE
+        ====================== */
+        gsap.set(cursorRef.current, {
+            xPercent: -50,
+            yPercent: -50,
+            autoAlpha: 0,
+            scale: 0.9,
+        });
 
-        return () => ctx.revert();
-    }, []);
+    }, sectionRef);
+
+    window.addEventListener("mousemove", moveCursor);
+
+    return () => {
+        window.removeEventListener("mousemove", moveCursor);
+        ctx.revert();
+    };
+}, []);
 
     /* ======================
        HOVER HANDLERS

@@ -1,34 +1,35 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function PortfolioSection() {
   const sectionRef = useRef(null);
   const cardsRef = useRef([]);
 
-  useEffect(() => {
-    if (!cardsRef.current.length) return;
+  useLayoutEffect(() => {
+    if (!sectionRef.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
+
       /* ===============================
          CARD STAGGER REVEAL
       =============================== */
       gsap.from(cardsRef.current, {
-        y: 80,
+        y: 100,
         opacity: 0,
         duration: 1,
         stagger: 0.2,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "10% top",
-          end: "bottom 30%",
-          scrub: 1,
+          start: "top 85%",   // 🔥 clean & predictable
+          toggleActions: "play none none reverse",
+          // markers: true,
         },
       });
 
@@ -37,7 +38,6 @@ export default function PortfolioSection() {
       =============================== */
       cardsRef.current.forEach((card) => {
         const imageWrap = card.querySelector(".image-wrap");
-
         if (!imageWrap) return;
 
         gsap.fromTo(
@@ -50,10 +50,12 @@ export default function PortfolioSection() {
             scrollTrigger: {
               trigger: card,
               start: "top 80%",
+              toggleActions: "play none none reverse",
             },
           }
         );
       });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -62,6 +64,7 @@ export default function PortfolioSection() {
   return (
     <section ref={sectionRef} className="py-24">
       <div className="max-w-7xl mx-auto px-6">
+        
         {/* Header */}
         <div className="max-w-5xl mx-auto mb-20 text-center">
           <h2 className="text-lg md:text-3xl lg:text-5xl font-medium tracking-tight">
@@ -113,6 +116,7 @@ export default function PortfolioSection() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

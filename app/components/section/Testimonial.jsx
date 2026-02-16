@@ -4,8 +4,6 @@ import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function ResultsTestimonials() {
   const sectionRef = useRef(null);
   const cardsRef = useRef([]);
@@ -13,24 +11,35 @@ export default function ResultsTestimonials() {
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cardsRef.current,
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          ease: "power3.out",
-          stagger: 0.2,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "195% 75%",
-            end: "205% 75%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
+
+      // Set initial state
+      gsap.set(cardsRef.current, {
+        y: 80,
+        opacity: 0,
+        scale: 0.96,
+      });
+
+      // Animate on scroll
+      gsap.to(cardsRef.current, {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        ease: "power3.out",
+        stagger: {
+          amount: 0.6,
+        },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",   // 🔥 clean & reliable
+          toggleActions: "play none none reverse",
+          // markers: true,   // enable for debugging
+        },
+      });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -39,13 +48,13 @@ export default function ResultsTestimonials() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 px-4 overflow-hidden"
+      className="relative py-24 px-4 overflow-hidden bg-[#f8f9fb]"
     >
       {/* Background Blobs */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 -left-32 w-[420px] h-[420px] bg-gradient-to-br from-emerald-200 via-lime-200 to-yellow-200 rounded-full blur-[140px] opacity-40 animate-[blob_22s_ease-in-out_infinite]" />
-        <div className="absolute top-1/3 -right-40 w-[480px] h-[480px] bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200 rounded-full blur-[160px] opacity-35 animate-[blob_26s_ease-in-out_infinite_reverse]" />
-        <div className="absolute bottom-0 left-1/4 w-[360px] h-[360px] bg-gradient-to-br from-cyan-200 via-teal-200 to-emerald-200 rounded-full blur-[120px] opacity-30 animate-[blob_30s_ease-in-out_infinite]" />
+        <div className="absolute -top-40 -left-32 w-[420px] h-[420px] bg-gradient-to-br from-emerald-200 via-lime-200 to-yellow-200 rounded-full blur-[140px] opacity-40" />
+        <div className="absolute top-1/3 -right-40 w-[480px] h-[480px] bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200 rounded-full blur-[160px] opacity-35" />
+        <div className="absolute bottom-0 left-1/4 w-[360px] h-[360px] bg-gradient-to-br from-cyan-200 via-teal-200 to-emerald-200 rounded-full blur-[120px] opacity-30" />
       </div>
 
       <div className="relative max-w-7xl mx-auto">
@@ -59,9 +68,9 @@ export default function ResultsTestimonials() {
           </h2>
         </div>
 
-        {/* Grid Encouraging Cards */}
+        {/* Grid Cards */}
         <div className="grid gap-8 md:grid-cols-3 auto-rows-fr">
-          
+
           {/* Big Stat Card */}
           <div
             ref={(el) => (cardsRef.current[0] = el)}
@@ -78,7 +87,6 @@ export default function ResultsTestimonials() {
                 Faster business formation than initially projected.
               </p>
             </div>
-
             <p className="text-sm text-gray-500 mt-10 leading-relaxed">
               “What felt overwhelming at first turned into a smooth and surprisingly fast launch process.”
             </p>
@@ -100,56 +108,44 @@ export default function ResultsTestimonials() {
                 Client questions resolved within 24 hours.
               </p>
             </div>
-
             <p className="text-sm text-gray-500 mt-8">
               “Fast, precise, and consistently reliable.”
             </p>
           </div>
 
-          {/* Quote Card 1 */}
-          <div
-            ref={(el) => (cardsRef.current[2] = el)}
-            className="rounded-[28px] bg-white/85 backdrop-blur-xl border border-black/15 shadow-[0_20px_60px_-25px_rgba(0,0,0,0.14)] p-10 flex flex-col justify-between"
-          >
-            <p className="text-gray-800 text-lg leading-relaxed">
-              “Their clarity and attention to detail completely changed how we approached our contracts.”
-            </p>
+          {/* Quote Cards */}
+          {[
+            {
+              text: "Their clarity and attention to detail completely changed how we approached our contracts.",
+              name: "Amber Becker",
+              role: "Freelancer",
+            },
+            {
+              text: "Everything moved faster than expected — from planning to execution.",
+              name: "Giulia Testa",
+              role: "Founder",
+            },
+            {
+              text: "Structured, calm, and exceptionally well thought out process.",
+              name: "Daniel Reed",
+              role: "Startup Owner",
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              ref={(el) => (cardsRef.current[i + 2] = el)}
+              className="rounded-[28px] bg-white/85 backdrop-blur-xl border border-black/15 shadow-[0_20px_60px_-25px_rgba(0,0,0,0.14)] p-10 flex flex-col justify-between"
+            >
+              <p className="text-gray-800 text-lg leading-relaxed">
+                “{item.text}”
+              </p>
 
-            <div className="mt-8">
-              <p className="font-medium text-gray-900">Amber Becker</p>
-              <p className="text-sm text-gray-500">Freelancer</p>
+              <div className="mt-8">
+                <p className="font-medium text-gray-900">{item.name}</p>
+                <p className="text-sm text-gray-500">{item.role}</p>
+              </div>
             </div>
-          </div>
-
-          {/* Quote Card 2 */}
-          <div
-            ref={(el) => (cardsRef.current[3] = el)}
-            className="rounded-[28px] bg-white/85 backdrop-blur-xl border border-black/15 shadow-[0_20px_60px_-25px_rgba(0,0,0,0.14)] p-10 flex flex-col justify-between"
-          >
-            <p className="text-gray-800 text-lg leading-relaxed">
-              “Everything moved faster than expected — from planning to execution. It felt structured, calm, and well thought out.”
-            </p>
-
-            <div className="mt-8">
-              <p className="font-medium text-gray-900">Giulia Testa</p>
-              <p className="text-sm text-gray-500">Founder</p>
-            </div>
-          </div>
-
-          {/* Quote Card 3 (Fixed Ref Index) */}
-          <div
-            ref={(el) => (cardsRef.current[4] = el)}
-            className="rounded-[28px] bg-white/85 backdrop-blur-xl border border-black/15 shadow-[0_20px_60px_-25px_rgba(0,0,0,0.14)] p-10 flex flex-col justify-between"
-          >
-            <p className="text-gray-800 text-lg leading-relaxed">
-              “Their clarity and attention to detail completely changed how we approached our contracts.”
-            </p>
-
-            <div className="mt-8">
-              <p className="font-medium text-gray-900">Amber Becker</p>
-              <p className="text-sm text-gray-500">Freelancer</p>
-            </div>
-          </div>
+          ))}
 
         </div>
       </div>
