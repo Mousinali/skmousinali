@@ -8,11 +8,13 @@ import Footer from "./Footer";
 export default function ClientLayout({ children }) {
   return (
     <>
-      <PageLoader />
-      <SmoothScroll />
-      <Header />
-      <main>{children}</main>
-      <Footer />
+      <PageLoader key="page-loader" />
+      <SmoothScroll key="smooth-scroll" />
+      <Header key="header" />
+      <main className="w-full">
+        {children}
+      </main>
+      <Footer key="footer" />
     </>
   );
 }

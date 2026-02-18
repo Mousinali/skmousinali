@@ -167,7 +167,7 @@ useEffect(() => {
       </div>
 
       {/* MARQUEE RAW JSX (NO ARRAY) */}
-      <div className="relative z-10 mt-24 overflow-hidden max-w-7xl mx-auto">
+      <div className="relative z-10 mt-24 overflow-hidden max-w-7xl mx-auto marquee-mask">
         <div ref={marqueeRef} className="flex gap-8 items-center px-24">
 
           <div className="min-w-[360px]"><img src="/images/port-1.webp" className="w-full rounded-2xl" /></div>
